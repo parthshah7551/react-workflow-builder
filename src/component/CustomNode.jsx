@@ -1,4 +1,6 @@
 import React, { memo } from "react";
+import PropTypes from "prop-types";
+
 import { Handle, useReactFlow, useStoreApi, Position } from "reactflow";
 
 const options = [
@@ -58,6 +60,12 @@ function Select({ value, handleId, nodeId }) {
   );
 }
 
+Select.propTypes = {
+  value: PropTypes.string.isRequired,
+  handleId: PropTypes.string.isRequired,
+  nodeId: PropTypes.string.isRequired,
+};
+
 function CustomNode({ id, data }) {
   return (
     <>
@@ -77,5 +85,12 @@ function CustomNode({ id, data }) {
     </>
   );
 }
+
+CustomNode.propTypes = {
+  id: PropTypes.string.isRequired,
+  data: PropTypes.shape({
+    selects: PropTypes.object.isRequired,
+  }).isRequired,
+};
 
 export default memo(CustomNode);
