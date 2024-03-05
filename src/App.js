@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
 import OverviewFlow from "./component/OverviewFlow";
 import { counterReducer } from "./redux/reducer";
+import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 
 function App() {
   const dispatch = useDispatch();
