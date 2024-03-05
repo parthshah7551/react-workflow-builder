@@ -1,11 +1,11 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import "./App.css";
-import OverviewFlow from "./component/OverviewFlow";
-import { counterReducer } from "./redux/reducer";
+import "./Styles/index.css";
+import OverviewFlow from "./component/ReactFlow/OverviewFlow";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
+import Navbarcomponent from "./component/Navbar/Navbarcomponent";
 
 function App() {
-  const dispatch = useDispatch();
   const data = useSelector((state) => {
     console.log("state: ", state);
     return state;
@@ -13,13 +13,7 @@ function App() {
   console.log("data: ", data);
   return (
     <div className="App">
-      <button
-        onClick={() => {
-          dispatch(counterReducer(data.counterValue));
-        }}
-      >
-        Click here
-      </button>
+      <Navbarcomponent />
       <OverviewFlow />
     </div>
   );
