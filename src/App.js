@@ -3,7 +3,6 @@ import "./App.css";
 import "./Styles/index.css";
 import OverviewFlow from "./component/ReactFlow/OverviewFlow";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
-import Navbarcomponent from "./component/Navbar/Navbarcomponent";
 
 function App() {
   const data = useSelector((state) => {
@@ -13,7 +12,6 @@ function App() {
   console.log("data: ", data);
   return (
     <div className="App">
-      <Navbarcomponent />
       <OverviewFlow />
     </div>
   );
