@@ -4,6 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import PropTypes from "prop-types";
+import Swal from "sweetalert2";
 
 const AddWorkflowModal = (props) => {
   const validationSchema = Yup.object().shape({
@@ -13,9 +14,22 @@ const AddWorkflowModal = (props) => {
   });
   const initialValues = { flowName: "" };
   const handleSubmit = (values, { setSubmitting }) => {
-    console.log("calling======<<<<<<<<<<");
-    console.log(values);
-    setSubmitting(false);
+    try {
+      console.log("calling======<<<<<<<<<<");
+      console.log(values);
+      setSubmitting(false);
+      Swal.fire({
+        title: "Saved successfully!",
+        text: "Workflow has been saved",
+        icon: "success",
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
+      });
+    }
   };
 
   return (

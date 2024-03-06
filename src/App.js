@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import "./App.css";
 import "./Styles/index.css";
-import OverviewFlow from "./component/ReactFlow/OverviewFlow";
+import OverviewFlow from "./component/ReactFlow/OverviewFlow.jsx";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 
 function App() {
