@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 import Papa from "papaparse";
+import Swal from "sweetalert2";
 // import { useDispatch, useSelector } from "react-redux";
 // import { counterReducer } from "../../redux/reducer";
 // import { Button, Form } from "react-bootstrap";
@@ -14,22 +15,30 @@ const Navbarcomponent = ({ saveModal }) => {
   //   return state;
   // });
   const handleFileUpload = (event) => {
-    const file = event?.target?.files[0]; // Check if event object and target property exist
-    console.log("file: ", file);
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const csvData = event.target.result;
-        Papa.parse(csvData, {
-          complete: (result) => {
-            console.log("Parsed CSV data:", result.data);
-            // Handle parsed CSV data here
-          },
-          header: true, // Set to true if CSV file contains headers
-        });
-      };
-      reader.readAsText(file);
+    try {
+      const file = event?.target?.files[0]; // Check if event object and target property exist
+      console.log("file: ", file);
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const csvData = event.target.result;
+          Papa.parse(csvData, {
+            complete: (result) => {
+              console.log("Parsed CSV data:", result.data);
+              // Handle parsed CSV data here
+            },
+            header: true, // Set to true if CSV file contains headers
+          });
+        };
+        reader.readAsText(file);
+      }
+    } catch (error) {
+      console.log("error: ", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
+      });
     }
   };
   return (

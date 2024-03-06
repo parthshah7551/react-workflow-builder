@@ -2,6 +2,7 @@
   "name": "react-workflow-builder",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
     "@testing-library/jest-dom": "^5.17.0",
@@ -20,6 +21,7 @@
     "react-select": "^5.8.0",
     "reactflow": "^11.10.4",
     "redux": "^5.0.1",
+    "sweetalert2": "^11.10.6",
     "web-vitals": "^2.1.4",
     "yup": "^1.3.3"
   },
