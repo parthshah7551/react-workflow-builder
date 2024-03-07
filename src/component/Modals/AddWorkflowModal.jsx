@@ -15,8 +15,6 @@ const AddWorkflowModal = (props) => {
   const initialValues = { flowName: "" };
   const handleSubmit = (values, { setSubmitting }) => {
     try {
-      console.log("calling======<<<<<<<<<<");
-      console.log(values);
       setSubmitting(false);
       Swal.fire({
         title: "Saved successfully!",
