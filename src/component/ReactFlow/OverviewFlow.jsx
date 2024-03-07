@@ -10,11 +10,13 @@ import AddWorkflowModal from "../Modals/AddWorkflowModal";
 import Nodes from "../NodesComponent/Nodes.jsx";
 import { useSelector } from "react-redux";
 import { useFlow } from "../../contextAPI/index.js";
-import ButtonNode from "../NodesComponent/ButtonNode/index.jsx";
+import ButtonNode from "../NodesComponent/ButtonNode/ButtonNode.jsx";
+import SortingNode from "../NodesComponent/SortingNode/SortingNode.jsx";
 
 const nodeTypes = {
   custom: CustomNode,
   buttonNode: ButtonNode,
+  sortingNode: SortingNode,
 };
 
 const minimapStyle = {
@@ -29,13 +31,18 @@ const OverviewFlow = () => {
   const [isOpenSaveModal, setIsOpenSaveModal] = useState(false);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  const storeData = useSelector((state) => {
-    return state;
+  const reduxStoreData = useSelector((state) => {
+    if (state) return state;
   });
-  console.log("storeData: ", storeData);
+
+  console.log("reduxStoreData: ", reduxStoreData);
+
+  let sortingOrderOptions = [
+    { label: "Ascending", value: "asc" },
+    { label: "Descending", value: "desc" },
+  ];
 
   const onConnect = useCallback((params) => {
-    console.log("params: ", params);
     return setEdges((eds) => addEdge(params, eds));
   }, []);
 
@@ -59,28 +66,32 @@ const OverviewFlow = () => {
         x: event.clientX,
         y: event.clientY,
       });
-      console.log("position: ", position);
 
       let newNode = [];
-      // switch (type) {
-      //     newNode.push(
-      //       createNode("end-1", type, position, null, null, {
-      //         data: { label: "End Conversation" },
-      //       })
-      //     );
-      //     break;
-      //   default:
-      //     newNode.push({});
-      // }
-      newNode.push({
-        id: `${Date.now()}`,
-        data: {
-          label: "Sorting",
-        },
-        sourcePosition: "right",
-        type: "custom",
-        position,
-      });
+      switch (type) {
+        case "sorting":
+          newNode.push({
+            id: `${Date.now()}`,
+            type: "sortingNode",
+            position,
+            data: {
+              label: `sortingNode`,
+              totalSelectionDropdowns: [
+                {
+                  "Column Name": JSON.parse(localStorage.getItem("columnName")),
+                },
+                { Order: sortingOrderOptions },
+              ],
+              selects: {
+                column: "",
+                order: "",
+              },
+            },
+          });
+          break;
+        default:
+          newNode.push({});
+      }
 
       setNodes((prevNodes) => [...prevNodes, ...newNode]);
     },
@@ -93,16 +104,16 @@ const OverviewFlow = () => {
 
   // we are using a bit of a shortcut here to adjust the edge type
   // this could also be done with a custom edge for example
-  const edgesWithUpdatedTypes = edges.map((edge) => {
-    if (edge.sourceHandle) {
-      const edgeType = nodes.find((node) => node.type === "custom").data
-        .selects[edge.sourceHandle];
-      edge.type = edgeType;
-    }
+  // const edgesWithUpdatedTypes = edges.map((edge) => {
+  //   if (edge.sourceHandle) {
+  //     const edgeType = nodes.find((node) => node.type === "custom").data
+  //       .selects[edge.sourceHandle];
+  //     edge.type = edgeType;
+  //   }
 
-    return edge;
-  });
-  console.log("edgesWithUpdatedTypes: ", edgesWithUpdatedTypes);
+  //   return edge;
+  // });
+  // console.log("edgesWithUpdatedTypes: ", edgesWithUpdatedTypes);
 
   return (
     <div className="overviewFlow">

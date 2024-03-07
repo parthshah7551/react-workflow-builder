@@ -6,17 +6,21 @@ import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 // import { counterReducer } from "../../redux/reducer";
 // import { Button, Form } from "react-bootstrap";
-import { selectedFileData, selectedFileName } from "../../redux/reducer.js";
+import {
+  selectedFileData,
+  selectedFileName,
+  csvFileKeys,
+} from "../../redux/reducer.js";
 import { useFlow } from "../../contextAPI/index.js";
 
 const Navbarcomponent = ({ saveModal }) => {
   // const [csvFileName, setCSVFileName] = useState("");
   const dispatch = useDispatch();
   const { setNodes } = useFlow();
-  const data = useSelector((state) => {
+  const storeDataInNavbar = useSelector((state) => {
     return state;
   });
-  console.log("data123: ", data);
+  console.log("storeDataInNavbar: ", storeDataInNavbar);
   const handleFileUpload = (event) => {
     try {
       const file = event?.target?.files[0]; // Check if event object and target property exist
@@ -28,6 +32,21 @@ const Navbarcomponent = ({ saveModal }) => {
             complete: (result) => {
               dispatch(selectedFileData(result.data));
               dispatch(selectedFileName(file.name));
+              const arrayOfKeys = result?.data?.reduce((keys, obj) => {
+                Object.keys(obj).forEach((key) => {
+                  if (!keys.includes(key)) {
+                    keys.push(key);
+                  }
+                });
+                return keys;
+              }, []);
+              const columnNames = arrayOfKeys.map((item) => ({
+                label: item,
+                value: item,
+              }));
+              dispatch(csvFileKeys(arrayOfKeys));
+              localStorage.setItem("columnName", JSON.stringify(columnNames));
+
               setNodes((prevNodes) => [
                 ...prevNodes,
                 {

@@ -6,6 +6,7 @@ const RegistrationDataSlice = createSlice({
     counterValue: 0,
     selectedFileData: [],
     selectedFileName: "",
+    csvFileKeys: [],
   },
   reducers: {
     counterReducer: (state, action) => {
@@ -17,10 +18,17 @@ const RegistrationDataSlice = createSlice({
     selectedFileName: (state, action) => {
       return { ...state, selectedFileName: action.payload };
     },
+    csvFileKeys: (state, action) => {
+      return { ...state, csvFileKeys: action.payload };
+    },
   },
 });
 
-export const { counterReducer, selectedFileData, selectedFileName } =
-  RegistrationDataSlice.actions;
+export const {
+  counterReducer,
+  selectedFileData,
+  selectedFileName,
+  csvFileKeys,
+} = RegistrationDataSlice.actions;
 
 export default RegistrationDataSlice.reducer;

@@ -4,7 +4,6 @@ import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 const ButtonNode = ({ data }) => {
-  console.log("data: ", data);
   const nodeStyle = {
     background: "lightcyan",
     border: "1px solid grey",
