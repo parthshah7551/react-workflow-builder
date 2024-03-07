@@ -6,28 +6,37 @@ import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 // import { counterReducer } from "../../redux/reducer";
 // import { Button, Form } from "react-bootstrap";
-import { selectedFileData } from "../../redux/reducer.js";
+import { selectedFileData, selectedFileName } from "../../redux/reducer.js";
+import { useFlow } from "../../contextAPI/index.js";
 
 const Navbarcomponent = ({ saveModal }) => {
   // const [csvFileName, setCSVFileName] = useState("");
   const dispatch = useDispatch();
+  const { setNodes } = useFlow();
   const data = useSelector((state) => {
-    console.log("state: ", state);
     return state;
   });
   console.log("data123: ", data);
   const handleFileUpload = (event) => {
     try {
       const file = event?.target?.files[0]; // Check if event object and target property exist
-      console.log("file: ", file);
       if (file) {
         const reader = new FileReader();
         reader.onload = (event) => {
           const csvData = event.target.result;
           Papa.parse(csvData, {
             complete: (result) => {
-              console.log("Parsed CSV data:", result.data);
               dispatch(selectedFileData(result.data));
+              dispatch(selectedFileName(file.name));
+              setNodes((prevNodes) => [
+                ...prevNodes,
+                {
+                  id: `${Date.now()}`,
+                  data: { label: file.name, csvData: result.data },
+                  type: "buttonNode",
+                  position: { x: 0, y: 100 },
+                },
+              ]);
               // Handle parsed CSV data here
             },
             header: true, // Set to true if CSV file contains headers
@@ -36,7 +45,6 @@ const Navbarcomponent = ({ saveModal }) => {
         reader.readAsText(file);
       }
     } catch (error) {
-      console.log("error: ", error);
       Swal.fire({
         icon: "error",
         title: "Oops...",

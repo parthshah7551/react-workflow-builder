@@ -1,43 +1,90 @@
 import React, { useState, useCallback } from "react";
-import ReactFlow, {
-  addEdge,
-  MiniMap,
-  Controls,
-  Background,
-  useNodesState,
-  useEdgesState,
-} from "reactflow";
+import ReactFlow, { addEdge, MiniMap, Controls, Background } from "reactflow";
 
-import {
-  nodes as initialNodes,
-  edges as initialEdges,
-} from "./initial-elements";
 import CustomNode from "./CustomNode";
 
 import "reactflow/dist/style.css";
 import "./overview.css";
 import Navbarcomponent from "../Navbar/Navbarcomponent";
 import AddWorkflowModal from "../Modals/AddWorkflowModal";
+import Nodes from "../NodesComponent/Nodes.jsx";
+import { useSelector } from "react-redux";
+import { useFlow } from "../../contextAPI/index.js";
+import ButtonNode from "../NodesComponent/ButtonNode/index.jsx";
 
 const nodeTypes = {
   custom: CustomNode,
+  buttonNode: ButtonNode,
 };
 
 const minimapStyle = {
   height: 120,
 };
 
-const onInit = (reactFlowInstance) =>
-  console.log("flow loaded:", reactFlowInstance);
-
 const OverviewFlow = () => {
+  const { nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange } =
+    useFlow();
+  console.log("nodes: ", nodes);
   // eslint-disable-next-line no-unused-vars
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [isOpenSaveModal, setIsOpenSaveModal] = useState(false);
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    []
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+  const storeData = useSelector((state) => {
+    return state;
+  });
+  console.log("storeData: ", storeData);
+
+  const onConnect = useCallback((params) => {
+    console.log("params: ", params);
+    return setEdges((eds) => addEdge(params, eds));
+  }, []);
+
+  const onDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }, []);
+
+  const onDrop = useCallback(
+    async (event) => {
+      event.preventDefault();
+
+      const type = event.dataTransfer.getData("application/reactflow");
+
+      // check if the dropped element is valid
+      if (typeof type === "undefined" || !type) {
+        return;
+      }
+
+      const position = reactFlowInstance.screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+      console.log("position: ", position);
+
+      let newNode = [];
+      // switch (type) {
+      //     newNode.push(
+      //       createNode("end-1", type, position, null, null, {
+      //         data: { label: "End Conversation" },
+      //       })
+      //     );
+      //     break;
+      //   default:
+      //     newNode.push({});
+      // }
+      newNode.push({
+        id: `${Date.now()}`,
+        data: {
+          label: "Sorting",
+        },
+        sourcePosition: "right",
+        type: "custom",
+        position,
+      });
+
+      setNodes((prevNodes) => [...prevNodes, ...newNode]);
+    },
+    [reactFlowInstance]
   );
 
   const saveModal = () => {
@@ -55,22 +102,26 @@ const OverviewFlow = () => {
 
     return edge;
   });
+  console.log("edgesWithUpdatedTypes: ", edgesWithUpdatedTypes);
 
   return (
     <div className="overviewFlow">
-      {console.log("isOpenSaveModal: ", isOpenSaveModal)}
       <Navbarcomponent saveModal={saveModal} />
       <AddWorkflowModal
         show={isOpenSaveModal}
         onHide={() => setIsOpenSaveModal(false)}
       />
+      <Nodes />
       <ReactFlow
         nodes={nodes}
-        edges={edgesWithUpdatedTypes}
+        edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        onInit={onInit}
+        onInit={(instance) => setReactFlowInstance(instance)}
+        onDrop={onDrop}
+        connectionLineType="smoothstep"
+        onDragOver={onDragOver}
         fitView
         attributionPosition="top-right"
         nodeTypes={nodeTypes}

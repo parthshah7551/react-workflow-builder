@@ -69,10 +69,19 @@ Select.propTypes = {
 function CustomNode({ id, data }) {
   return (
     <>
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{
+          right: -7,
+          width: 10,
+          height: 10,
+        }}
+      />
       <div className="custom-node__header">
         This is a <strong>custom node</strong>
       </div>
-      <div className="custom-node__body">
+      {/* <div className="custom-node__body">
         {Object.keys(data.selects).map((handleId) => (
           <Select
             key={handleId}
@@ -81,7 +90,7 @@ function CustomNode({ id, data }) {
             handleId={handleId}
           />
         ))}
-      </div>
+      </div> */}
     </>
   );
 }
