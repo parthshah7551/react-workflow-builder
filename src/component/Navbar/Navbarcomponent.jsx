@@ -27,8 +27,8 @@ const Navbarcomponent = ({ saveModal }) => {
       if (file) {
         const reader = new FileReader();
         reader.onload = (event) => {
-          const csvData = event.target.result;
-          Papa.parse(csvData, {
+          const csvFileData = event.target.result;
+          Papa.parse(csvFileData, {
             complete: (result) => {
               dispatch(selectedFileData(result.data));
               dispatch(selectedFileName(file.name));
@@ -46,12 +46,13 @@ const Navbarcomponent = ({ saveModal }) => {
               }));
               dispatch(csvFileKeys(arrayOfKeys));
               localStorage.setItem("columnName", JSON.stringify(columnNames));
+              localStorage.setItem("csvFileData", JSON.stringify(result?.data));
 
               setNodes((prevNodes) => [
                 ...prevNodes,
                 {
                   id: `${Date.now()}`,
-                  data: { label: file.name, csvData: result.data },
+                  data: { label: file.name, csvFileData: result.data },
                   type: "buttonNode",
                   position: { x: 0, y: 100 },
                 },
