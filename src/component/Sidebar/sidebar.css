@@ -1,0 +1,29 @@
+.mainContainer {
+    background: rgba(128, 128, 128, 0.1);
+    color: #000;
+    height: 100%;
+    width: 20%;
+    transition: all 0.5s;
+    padding: 20px;
+}
+
+.sidebarTopSection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
+.selectNodeText {
+    font-size: 25px;
+}
+
+.sidebarNodeBtn {
+    width: calc(100% - 20px);
+    font-size: 20px;
+    margin: 10px 0;
+}
+
+.sidebarHr {
+    margin: 10px 0;
+}
