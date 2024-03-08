@@ -24,7 +24,7 @@ function SelectComponent({ selectionDropdownData, sortBy, nodeId }) {
             ...node.data,
             selects: {
               ...node.data.selects,
-              [sortBy.toLowerCase()]: evt.target.value,
+              [sortBy]: evt.target.value,
             },
           };
         }

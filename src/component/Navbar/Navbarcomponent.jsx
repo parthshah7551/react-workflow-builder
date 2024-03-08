@@ -72,7 +72,7 @@ const Navbarcomponent = ({ saveModal }) => {
     }
   };
   return (
-    <div className="navbarContainer d-flex justify-content-between">
+    <div className="navbarContainer d-flex justify-content-between p-2">
       <div className="d-flex">
         <Button variant="secondary" className="m-2">
           <label htmlFor="fileSelect" style={{ margin: 0 }}>

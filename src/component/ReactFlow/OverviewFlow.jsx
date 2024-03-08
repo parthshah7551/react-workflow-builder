@@ -4,11 +4,11 @@ import ReactFlow, { addEdge, MiniMap, Controls, Background } from "reactflow";
 import "reactflow/dist/style.css";
 import Navbarcomponent from "../Navbar/Navbarcomponent";
 import AddWorkflowModal from "../Modals/AddWorkflowModal";
-import Nodes from "../NodesComponent/Nodes.jsx";
 import { useSelector } from "react-redux";
 import { useFlow } from "../../contextAPI/index.js";
 import ButtonNode from "../NodesComponent/ButtonNode/ButtonNode.jsx";
 import CustomNode from "../NodesComponent/CustomNode/CustomNode.jsx";
+import Sidebar from "../Sidebar/Sidebar.jsx";
 
 const nodeTypes = {
   buttonNode: ButtonNode,
@@ -112,31 +112,33 @@ const OverviewFlow = () => {
   // console.log("edgesWithUpdatedTypes: ", edgesWithUpdatedTypes);
 
   return (
-    <div className="overviewFlow">
+    <div>
       <Navbarcomponent saveModal={saveModal} />
       <AddWorkflowModal
         show={isOpenSaveModal}
         onHide={() => setIsOpenSaveModal(false)}
       />
-      <Nodes />
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onInit={(instance) => setReactFlowInstance(instance)}
-        onDrop={onDrop}
-        connectionLineType="smoothstep"
-        onDragOver={onDragOver}
-        fitView
-        attributionPosition="top-right"
-        nodeTypes={nodeTypes}
-      >
-        <MiniMap style={minimapStyle} zoomable pannable />
-        <Controls />
-        <Background color="#aaa" gap={16} />
-      </ReactFlow>
+      <div className="d-flex overviewFlow">
+        <Sidebar />
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onInit={(instance) => setReactFlowInstance(instance)}
+          onDrop={onDrop}
+          connectionLineType="smoothstep"
+          onDragOver={onDragOver}
+          fitView
+          attributionPosition="top-right"
+          nodeTypes={nodeTypes}
+        >
+          <MiniMap style={minimapStyle} zoomable pannable />
+          <Controls />
+          <Background color="#aaa" gap={16} />
+        </ReactFlow>
+      </div>
     </div>
   );
 };
