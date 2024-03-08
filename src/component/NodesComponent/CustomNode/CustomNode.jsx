@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { Handle, useReactFlow, useStoreApi, Position } from "reactflow";
 import PropTypes from "prop-types";
-import "./sortingNode.css";
+import "./customNode.css";
 // import { useSelector } from "react-redux";
 
 function SelectComponent({ selectionDropdownData, sortBy, nodeId }) {
@@ -29,7 +29,6 @@ function SelectComponent({ selectionDropdownData, sortBy, nodeId }) {
           };
         }
 
-        console.log("node: ", node);
         return node;
       })
     );
@@ -73,7 +72,7 @@ const SortingNode = ({ id, data }) => {
           />
         ))}
       </div>
-      <div className="custom-node_footer">Run </div>
+      <div className="custom-node_footer">Run</div>
     </>
   );
 };
