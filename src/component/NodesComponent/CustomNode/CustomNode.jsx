@@ -51,8 +51,6 @@ function SelectComponent({ selectionDropdownData, sortBy, nodeId }) {
           </select>
         </>
       ))}
-
-      <Handle type="source" position={Position.Right} id={sortBy} />
     </div>
   );
 }
@@ -72,6 +70,8 @@ const SortingNode = ({ id, data }) => {
           />
         ))}
       </div>
+      <Handle type="target" position={Position.Left} id={`left-${id}`} />
+      <Handle type="source" position={Position.Right} id={`right-${id}`} />
       <div className="custom-node_footer">Run</div>
     </>
   );

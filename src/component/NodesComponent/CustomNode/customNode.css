@@ -7,9 +7,18 @@
     border-radius: 2px;
 }
 
-.react-flow__node-customNode .react-flow__handle {
-    top: 24px;
-    right: -15px;
+.react-flow__node-customNode .react-flow__handle-right {
+    /* top: 26px;
+    right: -15px; */
+    width: 6px;
+    height: 10px;
+    border-radius: 2px;
+    background-color: #778899;
+}
+
+.react-flow__node-customNode .react-flow__handle-left {
+    /* top: 26px;
+    left: -15px; */
     width: 6px;
     height: 10px;
     border-radius: 2px;
@@ -69,15 +78,6 @@
     border-radius: 2px;
 }
 
-.react-flow__node-custom .react-flow__handle {
-    top: 24px;
-    right: -15px;
-    width: 6px;
-    height: 10px;
-    border-radius: 2px;
-    background-color: #778899;
-}
-
 .react-flow__node.circle {
     border-radius: 50%;
     width: 60px;
@@ -96,10 +96,6 @@
     line-height: 1.4;
     width: 225px;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 15%), 0 2px 4px -1px rgb(0 0 0 / 8%);
-}
-
-.react-flow__node.annotation .react-flow__handle {
-    display: none;
 }
 
 .custom-node__header {

@@ -15,10 +15,11 @@ const ButtonNode = ({ data }) => {
   const buttonStyle = {
     width: "auto",
     height: "100%",
-    padding: "0.5rem",
+    padding: "5px",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
+    fontSize: "10px",
   };
 
   return (
@@ -27,9 +28,11 @@ const ButtonNode = ({ data }) => {
         type="source"
         position={Position.Right}
         style={{
-          right: -7,
+          right: -4,
           width: 10,
           height: 10,
+          borderRadius: "2px",
+          backgroundColor: "#778899",
         }}
       />
       <div style={nodeStyle} className="rounded-3">
