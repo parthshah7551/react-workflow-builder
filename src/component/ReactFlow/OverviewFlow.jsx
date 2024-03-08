@@ -1,22 +1,18 @@
 import React, { useState, useCallback } from "react";
 import ReactFlow, { addEdge, MiniMap, Controls, Background } from "reactflow";
 
-import CustomNode from "./CustomNode";
-
 import "reactflow/dist/style.css";
-import "./overview.css";
 import Navbarcomponent from "../Navbar/Navbarcomponent";
 import AddWorkflowModal from "../Modals/AddWorkflowModal";
 import Nodes from "../NodesComponent/Nodes.jsx";
 import { useSelector } from "react-redux";
 import { useFlow } from "../../contextAPI/index.js";
 import ButtonNode from "../NodesComponent/ButtonNode/ButtonNode.jsx";
-import SortingNode from "../NodesComponent/SortingNode/SortingNode.jsx";
+import CustomNode from "../NodesComponent/CustomNode/CustomNode.jsx";
 
 const nodeTypes = {
-  custom: CustomNode,
   buttonNode: ButtonNode,
-  sortingNode: SortingNode,
+  customNode: CustomNode,
 };
 
 const minimapStyle = {
@@ -72,10 +68,10 @@ const OverviewFlow = () => {
         case "sorting":
           newNode.push({
             id: `${Date.now()}`,
-            type: "sortingNode",
+            type: "customNode",
             position,
             data: {
-              label: `sortingNode`,
+              label: `sorting`,
               totalSelectionDropdowns: [
                 {
                   "Column Name": JSON.parse(localStorage.getItem("columnName")),
