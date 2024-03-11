@@ -2,8 +2,10 @@ import React, { useEffect } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import PropTypes from "prop-types";
+import { useFlow } from "../../contextAPI";
 
-const ReactTable = ({ newTableData }) => {
+const ReactTable = () => {
+  const { newTableData } = useFlow();
   const columnsValue = [];
   const arrayOfKeys = newTableData?.reduce((keys, obj) => {
     Object.keys(obj)?.forEach((key) => {

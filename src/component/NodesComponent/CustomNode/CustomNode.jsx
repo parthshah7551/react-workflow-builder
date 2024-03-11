@@ -2,6 +2,8 @@ import React, { memo } from "react";
 import { Handle, useReactFlow, useStoreApi, Position } from "reactflow";
 import PropTypes from "prop-types";
 import "./customNode.css";
+import { useFlow } from "../../../contextAPI";
+import { sortByColumn } from "../../../commonFunctions/sortByColumn";
 // import { useSelector } from "react-redux";
 
 function SelectComponent({ selectionDropDownData, nodeId }) {
@@ -29,7 +31,6 @@ function SelectComponent({ selectionDropDownData, nodeId }) {
 
   return (
     <div className="custom-node__select">
-      {console.log("selectionDropDownData: ", selectionDropDownData)}
       <>
         <div>{selectionDropDownData.label}</div>
         <select
@@ -51,7 +52,42 @@ function SelectComponent({ selectionDropDownData, nodeId }) {
 }
 
 const SortingNode = ({ id, data }) => {
-  console.log("data11122: ", data);
+  const { nodes, setNewTableData } = useFlow();
+  const runButtonClick = async (nodeId) => {
+    let filteredData = [];
+
+    await Promise.all(
+      nodes?.map((nodeItem) => {
+        if (nodeItem?.id === nodeId) {
+          filteredData = [...nodeItem.data.currentOutputData];
+        }
+      })
+    );
+
+    let outputData = [];
+    console.log("outputData: ", outputData);
+    await Promise.all(
+      nodes?.map(async (nodeItem) => {
+        if (nodeItem?.id === nodeId) {
+          if (nodeItem.data.label === "sort" && !nodeItem.data.selects.column) {
+            outputData = [...filteredData];
+          } else if (
+            nodeItem.data.label === "sort" &&
+            nodeItem.data.selects.column
+          ) {
+            const outputData = await sortByColumn(
+              filteredData,
+              nodeItem.data.selects.column,
+              nodeItem.data.selects.order
+            );
+            nodeItem.data.currentOutputData = [...outputData];
+            setNewTableData(outputData);
+          }
+        }
+      })
+    );
+  };
+
   return (
     <>
       <div className="custom-node__header">
@@ -69,7 +105,14 @@ const SortingNode = ({ id, data }) => {
       </div>
       <Handle type="target" position={Position.Left} id={`left-${id}`} />
       <Handle type="source" position={Position.Right} id={`right-${id}`} />
-      <div className="custom-node_footer">Run</div>
+      <div
+        className="custom-node_footer"
+        onClick={() => {
+          runButtonClick(id);
+        }}
+      >
+        Run
+      </div>
     </>
   );
 };

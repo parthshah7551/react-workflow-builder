@@ -10,6 +10,7 @@ import ButtonNode from "../NodesComponent/ButtonNode/ButtonNode.jsx";
 import CustomNode from "../NodesComponent/CustomNode/CustomNode.jsx";
 import Sidebar from "../Sidebar/Sidebar.jsx";
 import ReactTable from "../ReactTable/ReactTable.jsx";
+import { sortByColumn } from "../../commonFunctions/sortByColumn.js";
 
 const nodeTypes = {
   buttonNode: ButtonNode,
@@ -19,40 +20,21 @@ const nodeTypes = {
 const minimapStyle = {
   height: 120,
 };
-function sortByColumn(array, columnName, sortOrder = "asc") {
-  console.log("array: ", array);
-  console.log("columnName: ", columnName);
-  console.log("sortOrder: ", sortOrder);
-  return array.sort((a, b) => {
-    let valueA = a[columnName];
-    let valueB = b[columnName];
-
-    // Handle string and numeric values
-    if (typeof valueA === "string" && typeof valueB === "string") {
-      // Convert names to lowercase for case-insensitive sorting
-      valueA = valueA.toLowerCase();
-      valueB = valueB.toLowerCase();
-    }
-
-    if (sortOrder === "asc") {
-      return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
-    } else if (sortOrder === "desc") {
-      return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
-    } else {
-      throw new Error("Invalid sortOrder. Use 'asc' or 'desc'.");
-    }
-  });
-}
 
 const OverviewFlow = () => {
-  const { nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange } =
-    useFlow();
-  console.log("nodes123: ", nodes);
-  console.log("edges: ", edges);
+  const {
+    nodes,
+    edges,
+    setNodes,
+    setEdges,
+    onNodesChange,
+    onEdgesChange,
+    setNewTableData,
+    newTableData,
+  } = useFlow();
   // eslint-disable-next-line no-unused-vars
   const [isOpenSaveModal, setIsOpenSaveModal] = useState(false);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [newTableData, setNewTableData] = useState([]);
 
   const reduxStoreData = useSelector((state) => {
     if (state) return state;
@@ -97,13 +79,11 @@ const OverviewFlow = () => {
               nodeItem.data.label === "sort" &&
               nodeItem.data.selects.column
             ) {
-              console.log("filteredData: ", filteredData);
               const outputData = await sortByColumn(
                 filteredData,
                 nodeItem.data.selects.column,
                 nodeItem.data.selects.order
               );
-              console.log("Calling====>>>>>>>>>>>>>>>", outputData);
               nodeItem.data.currentOutputData = [...outputData];
               setNewTableData(outputData);
             }
