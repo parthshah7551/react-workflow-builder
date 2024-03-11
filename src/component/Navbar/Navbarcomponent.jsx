@@ -7,9 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 // import { counterReducer } from "../../redux/reducer";
 // import { Button, Form } from "react-bootstrap";
 import {
-  selectedFileData,
+  initialFileData,
   selectedFileName,
   csvFileKeys,
+  currentOutputData,
 } from "../../redux/reducer.js";
 import { useFlow } from "../../contextAPI/index.js";
 
@@ -30,8 +31,9 @@ const Navbarcomponent = ({ saveModal }) => {
           const csvFileData = event.target.result;
           Papa.parse(csvFileData, {
             complete: (result) => {
-              dispatch(selectedFileData(result.data));
+              dispatch(initialFileData(result.data));
               dispatch(selectedFileName(file.name));
+              dispatch(currentOutputData(result.data));
               const arrayOfKeys = result?.data?.reduce((keys, obj) => {
                 Object.keys(obj).forEach((key) => {
                   if (!keys.includes(key)) {
@@ -46,18 +48,24 @@ const Navbarcomponent = ({ saveModal }) => {
               }));
               dispatch(csvFileKeys(arrayOfKeys));
               localStorage.setItem("columnName", JSON.stringify(columnNames));
-              localStorage.setItem("csvFileData", JSON.stringify(result?.data));
+              localStorage.setItem(
+                "initialFileData",
+                JSON.stringify(result?.data)
+              );
 
               setNodes((prevNodes) => [
                 ...prevNodes,
                 {
                   id: `${Date.now()}`,
-                  data: { label: file.name, csvFileData: result.data },
+                  data: {
+                    label: "file",
+                    csvFileData: result.data,
+                    currentOutputData: result.data,
+                  },
                   type: "buttonNode",
                   position: { x: 0, y: 100 },
                 },
               ]);
-              // Handle parsed CSV data here
             },
             header: true, // Set to true if CSV file contains headers
           });

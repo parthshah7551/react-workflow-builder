@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import ReactFlow, { addEdge, MiniMap, Controls, Background } from "reactflow";
 
 import "reactflow/dist/style.css";
@@ -18,19 +18,48 @@ const nodeTypes = {
 const minimapStyle = {
   height: 120,
 };
+function sortByColumn(array, columnName, sortOrder = "asc") {
+  console.log("array: ", array);
+  console.log("columnName: ", columnName);
+  console.log("sortOrder: ", sortOrder);
+  return array.sort((a, b) => {
+    let valueA = a[columnName];
+    let valueB = b[columnName];
+
+    // Handle string and numeric values
+    if (typeof valueA === "string" && typeof valueB === "string") {
+      // Convert names to lowercase for case-insensitive sorting
+      valueA = valueA.toLowerCase();
+      valueB = valueB.toLowerCase();
+    }
+
+    if (sortOrder === "asc") {
+      return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+    } else if (sortOrder === "desc") {
+      return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+    } else {
+      throw new Error("Invalid sortOrder. Use 'asc' or 'desc'.");
+    }
+  });
+}
 
 const OverviewFlow = () => {
   const { nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange } =
     useFlow();
-  console.log("nodes: ", nodes);
+  console.log("nodes123: ", nodes);
+  console.log("edges: ", edges);
   // eslint-disable-next-line no-unused-vars
   const [isOpenSaveModal, setIsOpenSaveModal] = useState(false);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [newOutputData, setUseNewOutputData] = useState([]);
 
   const reduxStoreData = useSelector((state) => {
     if (state) return state;
   });
 
+  useEffect(() => {
+    console.log("newOutputData: ", newOutputData);
+  }, [newOutputData]);
   console.log("reduxStoreData: ", reduxStoreData);
 
   let sortingOrderOptions = [
@@ -38,9 +67,52 @@ const OverviewFlow = () => {
     { label: "Descending", value: "desc" },
   ];
 
-  const onConnect = useCallback((params) => {
-    return setEdges((eds) => addEdge(params, eds));
-  }, []);
+  const onConnect = useCallback(
+    async (params) => {
+      console.log("params++: ", nodes);
+      console.log("params: ", params);
+
+      let filteredData = [];
+
+      await Promise.all(
+        nodes?.map((nodeItem) => {
+          if (nodeItem?.id === params?.source) {
+            filteredData = [...nodeItem.data.currentOutputData];
+          }
+        })
+      );
+
+      let outputData = [];
+      await Promise.all(
+        nodes?.map(async (nodeItem) => {
+          if (nodeItem?.id === params?.target) {
+            if (
+              nodeItem.data.label === "sort" &&
+              !nodeItem.data.selects.column
+            ) {
+              outputData = [...filteredData];
+            } else if (
+              nodeItem.data.label === "sort" &&
+              nodeItem.data.selects.column
+            ) {
+              console.log("filteredData: ", filteredData);
+              const outputData = await sortByColumn(
+                filteredData,
+                nodeItem.data.selects.column,
+                nodeItem.data.selects.order
+              );
+              console.log("Calling====>>>>>>>>>>>>>>>", outputData);
+              nodeItem.data.currentOutputData = [...outputData];
+              setUseNewOutputData(outputData);
+            }
+          }
+        })
+      );
+
+      return setEdges((eds) => addEdge(params, eds));
+    },
+    [nodes]
+  );
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -65,19 +137,26 @@ const OverviewFlow = () => {
 
       let newNode = [];
       switch (type) {
-        case "sorting":
+        case "sort":
           newNode.push({
             id: `${Date.now()}`,
             type: "customNode",
             position,
             data: {
-              label: `sorting`,
+              label: `sort`,
               totalSelectionDropdowns: [
                 {
-                  "Column Name": JSON.parse(localStorage.getItem("columnName")),
+                  uniqueKey: "column",
+                  label: "Column Name",
+                  dropdownData: JSON.parse(localStorage.getItem("columnName")),
                 },
-                { Order: sortingOrderOptions },
+                {
+                  uniqueKey: "order",
+                  label: "Order",
+                  dropdownData: sortingOrderOptions,
+                },
               ],
+              currentOutputData: reduxStoreData.currentOutputData,
               selects: {
                 column: "",
                 order: "",
@@ -91,7 +170,7 @@ const OverviewFlow = () => {
 
       setNodes((prevNodes) => [...prevNodes, ...newNode]);
     },
-    [reactFlowInstance]
+    [reactFlowInstance, reduxStoreData]
   );
 
   const saveModal = () => {
