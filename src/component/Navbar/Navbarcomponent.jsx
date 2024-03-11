@@ -13,6 +13,7 @@ import {
   currentOutputData,
 } from "../../redux/reducer.js";
 import { useFlow } from "../../contextAPI/index.js";
+import { NavLink } from "react-router-dom";
 
 const Navbarcomponent = ({ saveModal, workFlowDataName }) => {
   const dispatch = useDispatch();
@@ -95,7 +96,12 @@ const Navbarcomponent = ({ saveModal, workFlowDataName }) => {
           />
         </Button>
         <Button variant="primary" className="m-2">
-          Dashboard
+          <NavLink
+            to="/dashboard"
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            Dashboard
+          </NavLink>
         </Button>
       </div>
       <div className="m-2 d-flex align-items-center">
