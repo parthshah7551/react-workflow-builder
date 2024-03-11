@@ -32,6 +32,8 @@ const OverviewFlow = () => {
     setNewTableData,
     newTableData,
   } = useFlow();
+  const workFlowDataName = JSON.parse(localStorage.getItem("workFlowDataName"));
+
   // eslint-disable-next-line no-unused-vars
   const [isOpenSaveModal, setIsOpenSaveModal] = useState(false);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -40,9 +42,30 @@ const OverviewFlow = () => {
     if (state) return state;
   });
 
+  const overViewFlowFunction = () => {
+    try {
+      const data = localStorage.getItem("workFlowDataName");
+      if (data) {
+        const parsedData = JSON.parse(data);
+        console.log("parsedData: ", parsedData);
+        const workFlowData = localStorage.getItem("workFlowData");
+        const parsedWorkFlowData = JSON.parse(workFlowData);
+        console.log("parsedWorkFlowData: ", parsedWorkFlowData);
+        // parsedWorkFlowData.filter((item)=>{})
+        const reactFlowData = parsedWorkFlowData[parsedData];
+        console.log("reactFlowData: ", reactFlowData);
+        setEdges(reactFlowData.edges);
+        setNodes(reactFlowData.nodes);
+        setNewTableData(reactFlowData.newTableData);
+      }
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+
   useEffect(() => {
-    console.log("newTableData: ", newTableData);
-  }, [newTableData]);
+    overViewFlowFunction();
+  }, []);
   console.log("reduxStoreData: ", reduxStoreData);
 
   let sortingOrderOptions = [
@@ -160,10 +183,14 @@ const OverviewFlow = () => {
   };
   return (
     <div>
-      <Navbarcomponent saveModal={saveModal} />
+      <Navbarcomponent
+        saveModal={saveModal}
+        workFlowDataName={workFlowDataName}
+      />
       <AddWorkflowModal
         show={isOpenSaveModal}
         onHide={() => setIsOpenSaveModal(false)}
+        workFlowDataName={workFlowDataName}
       />
       <div className="d-flex tableHeight">
         <Sidebar />

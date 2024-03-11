@@ -35,6 +35,7 @@ function SelectComponent({ selectionDropDownData, nodeId }) {
         <div>{selectionDropDownData.label}</div>
         <select
           className="nodrag"
+          defaultValue={selectionDropDownData?.uniqueKey}
           onChange={(e) => onChange(e, selectionDropDownData.uniqueKey)}
         >
           <option value="none" selected disabled hidden>
