@@ -84,7 +84,6 @@ const Navbarcomponent = ({ saveModal, workFlowDataName }) => {
     setEdges([]);
     setNodes([]);
     setNewTableData([]);
-    localStorage.removeItem("workFlowData");
     localStorage.removeItem("initialFileData");
     localStorage.removeItem("workFlowDataName");
     localStorage.removeItem("columnName");

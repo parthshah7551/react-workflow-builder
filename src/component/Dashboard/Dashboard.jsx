@@ -3,17 +3,18 @@ import { Button, ListGroup } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { useFlow } from "../../contextAPI";
 import "./dashboard.css";
+import Swal from "sweetalert2";
 
 const Dashboard = () => {
   const { setEdges, setNodes, setNewTableData } = useFlow();
-  const [dashboardDetails, setDashboardDetails] = useState([]);
+  const [dashboardDetails, setDashboardDetails] = useState({});
+  console.log("dashboardDetails11: ", dashboardDetails);
+
   const getDashboardDetails = () => {
     const jsonDashboardDetails = localStorage.getItem("workFlowData");
-    console.log("jsonDashboardDetails: ", jsonDashboardDetails);
     if (jsonDashboardDetails) {
       const parsedDashboardDetails = JSON.parse(jsonDashboardDetails);
-      console.log("parsedDashboardDetails: ", parsedDashboardDetails);
-      setDashboardDetails(Object.keys(parsedDashboardDetails));
+      setDashboardDetails(parsedDashboardDetails);
     }
   };
 
@@ -21,10 +22,25 @@ const Dashboard = () => {
     setEdges([]);
     setNodes([]);
     setNewTableData([]);
-    localStorage.removeItem("workFlowData");
     localStorage.removeItem("initialFileData");
     localStorage.removeItem("workFlowDataName");
     localStorage.removeItem("columnName");
+  };
+
+  const handleDelete = (item, keyName) => {
+    Swal.fire({
+      title: `Do you want to delete this ${keyName} workflow?`,
+      showDenyButton: true,
+      confirmButtonText: "Yes",
+      denyButtonText: `No`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        delete dashboardDetails[keyName];
+        localStorage.setItem("workFlowData", JSON.stringify(dashboardDetails));
+        await Swal.fire("Workflow deleted successfully!", "", "success");
+        getDashboardDetails();
+      }
+    });
   };
 
   useEffect(() => {
@@ -46,9 +62,9 @@ const Dashboard = () => {
         </Button>
       </div>
       <ListGroup className="mt-4 ">
-        {dashboardDetails.length > 0 ? (
+        {Object.keys(dashboardDetails).length > 0 ? (
           <>
-            {dashboardDetails.map((item, index) => (
+            {Object.keys(dashboardDetails).map((item, index) => (
               <ListGroup.Item
                 key={index}
                 className="d-flex justify-content-between align-items-center listGroupBackground"
@@ -58,7 +74,12 @@ const Dashboard = () => {
                   <Button variant="primary" className="me-2">
                     Edit
                   </Button>{" "}
-                  <Button variant="danger">Delete</Button>{" "}
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDelete(dashboardDetails[item], item)}
+                  >
+                    Delete
+                  </Button>{" "}
                 </div>
               </ListGroup.Item>
             ))}
