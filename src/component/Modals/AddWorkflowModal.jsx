@@ -5,22 +5,29 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import PropTypes from "prop-types";
 import Swal from "sweetalert2";
+import { useFlow } from "../../contextAPI";
 
 const AddWorkflowModal = (props) => {
+  const { nodes, edges, newTableData } = useFlow();
   const validationSchema = Yup.object().shape({
     flowName: Yup.string()
-      .matches(/^[A-Za-z\s]+$/, "Invalid company Name format")
+      .matches(/^[A-Za-z0-9\s]+$/, "Invalid Flow Name")
       .required("Workflow name is required"),
   });
   const initialValues = { flowName: "" };
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
     try {
+      const workFlowData = {
+        [values.flowName]: { nodes, edges, newTableData },
+      };
+      localStorage.setItem("workFlowData", JSON.stringify(workFlowData));
       setSubmitting(false);
-      Swal.fire({
+      await Swal.fire({
         title: "Saved successfully!",
         text: "Workflow has been saved",
         icon: "success",
       });
+      props.onHide();
     } catch (error) {
       Swal.fire({
         icon: "error",

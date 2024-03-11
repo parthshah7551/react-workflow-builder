@@ -15,7 +15,6 @@ import {
 import { useFlow } from "../../contextAPI/index.js";
 
 const Navbarcomponent = ({ saveModal }) => {
-  // const [csvFileName, setCSVFileName] = useState("");
   const dispatch = useDispatch();
   const { setNodes } = useFlow();
   const storeDataInNavbar = useSelector((state) => {
