@@ -1,4 +1,4 @@
-export const sortByColumn = (array, columnName, sortOrder = "asc") => {
+export const sortByColumn = (array, columnName, sortOrder) => {
   return array.sort((a, b) => {
     let valueA = a[columnName];
     let valueB = b[columnName];
@@ -10,12 +10,10 @@ export const sortByColumn = (array, columnName, sortOrder = "asc") => {
       valueB = valueB.toLowerCase();
     }
 
-    if (sortOrder === "asc") {
-      return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
-    } else if (sortOrder === "desc") {
+    if (sortOrder === "desc") {
       return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
     } else {
-      throw new Error("Invalid sortOrder. Use 'asc' or 'desc'.");
+      return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
     }
   });
 };

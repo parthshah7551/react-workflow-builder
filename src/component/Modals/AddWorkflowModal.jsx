@@ -14,13 +14,17 @@ const AddWorkflowModal = (props) => {
       .matches(/^[A-Za-z0-9\s]+$/, "Invalid Flow Name")
       .required("Workflow name is required"),
   });
-  const initialValues = { flowName: "" };
+  const initialValues = { flowName: props.workFlowDataName || "" };
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const workFlowData = {
-        [values.flowName]: { nodes, edges, newTableData },
+        [values.flowName.toLowerCase()]: { nodes, edges, newTableData },
       };
       localStorage.setItem("workFlowData", JSON.stringify(workFlowData));
+      localStorage.setItem(
+        "workFlowDataName",
+        JSON.stringify(values.flowName.toLowerCase())
+      );
       setSubmitting(false);
       await Swal.fire({
         title: "Saved successfully!",
@@ -96,6 +100,7 @@ const AddWorkflowModal = (props) => {
 
 AddWorkflowModal.propTypes = {
   onHide: PropTypes.func,
+  workFlowDataName: PropTypes.string,
 };
 
 export default AddWorkflowModal;

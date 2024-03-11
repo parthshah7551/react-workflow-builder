@@ -14,7 +14,7 @@ import {
 } from "../../redux/reducer.js";
 import { useFlow } from "../../contextAPI/index.js";
 
-const Navbarcomponent = ({ saveModal }) => {
+const Navbarcomponent = ({ saveModal, workFlowDataName }) => {
   const dispatch = useDispatch();
   const { setNodes } = useFlow();
   const storeDataInNavbar = useSelector((state) => {
@@ -98,6 +98,9 @@ const Navbarcomponent = ({ saveModal }) => {
           Dashboard
         </Button>
       </div>
+      <div className="m-2 d-flex align-items-center">
+        <h5>{workFlowDataName && `Workflow Name : ${workFlowDataName}`}</h5>
+      </div>
       <div className="m-2 me-4">
         <Button variant="primary" className="me-2">
           + Create New
@@ -111,5 +114,6 @@ const Navbarcomponent = ({ saveModal }) => {
 };
 Navbarcomponent.propTypes = {
   saveModal: PropTypes.func,
+  workFlowDataName: PropTypes.string,
 };
 export default Navbarcomponent;
