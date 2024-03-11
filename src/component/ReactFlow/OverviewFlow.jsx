@@ -9,6 +9,7 @@ import { useFlow } from "../../contextAPI/index.js";
 import ButtonNode from "../NodesComponent/ButtonNode/ButtonNode.jsx";
 import CustomNode from "../NodesComponent/CustomNode/CustomNode.jsx";
 import Sidebar from "../Sidebar/Sidebar.jsx";
+import ReactTable from "../ReactTable/ReactTable.jsx";
 
 const nodeTypes = {
   buttonNode: ButtonNode,
@@ -51,15 +52,15 @@ const OverviewFlow = () => {
   // eslint-disable-next-line no-unused-vars
   const [isOpenSaveModal, setIsOpenSaveModal] = useState(false);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [newOutputData, setUseNewOutputData] = useState([]);
+  const [newTableData, setNewTableData] = useState([]);
 
   const reduxStoreData = useSelector((state) => {
     if (state) return state;
   });
 
   useEffect(() => {
-    console.log("newOutputData: ", newOutputData);
-  }, [newOutputData]);
+    console.log("newTableData: ", newTableData);
+  }, [newTableData]);
   console.log("reduxStoreData: ", reduxStoreData);
 
   let sortingOrderOptions = [
@@ -83,6 +84,7 @@ const OverviewFlow = () => {
       );
 
       let outputData = [];
+      console.log("outputData: ", outputData);
       await Promise.all(
         nodes?.map(async (nodeItem) => {
           if (nodeItem?.id === params?.target) {
@@ -103,7 +105,7 @@ const OverviewFlow = () => {
               );
               console.log("Calling====>>>>>>>>>>>>>>>", outputData);
               nodeItem.data.currentOutputData = [...outputData];
-              setUseNewOutputData(outputData);
+              setNewTableData(outputData);
             }
           }
         })
@@ -176,20 +178,6 @@ const OverviewFlow = () => {
   const saveModal = () => {
     setIsOpenSaveModal(true);
   };
-
-  // we are using a bit of a shortcut here to adjust the edge type
-  // this could also be done with a custom edge for example
-  // const edgesWithUpdatedTypes = edges.map((edge) => {
-  //   if (edge.sourceHandle) {
-  //     const edgeType = nodes.find((node) => node.type === "custom").data
-  //       .selects[edge.sourceHandle];
-  //     edge.type = edgeType;
-  //   }
-
-  //   return edge;
-  // });
-  // console.log("edgesWithUpdatedTypes: ", edgesWithUpdatedTypes);
-
   return (
     <div>
       <Navbarcomponent saveModal={saveModal} />
@@ -197,27 +185,31 @@ const OverviewFlow = () => {
         show={isOpenSaveModal}
         onHide={() => setIsOpenSaveModal(false)}
       />
-      <div className="d-flex overviewFlow">
+      <div className="d-flex tableHeight">
         <Sidebar />
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onInit={(instance) => setReactFlowInstance(instance)}
-          onDrop={onDrop}
-          connectionLineType="smoothstep"
-          onDragOver={onDragOver}
-          fitView
-          attributionPosition="top-right"
-          nodeTypes={nodeTypes}
-        >
-          <MiniMap style={minimapStyle} zoomable pannable />
-          <Controls />
-          <Background color="#aaa" gap={16} />
-        </ReactFlow>
-        {/* <ReactTable /> */}
+        <div className="d-flex flex-column tableHeight">
+          <div className="overviewFlow">
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              onConnect={onConnect}
+              onInit={(instance) => setReactFlowInstance(instance)}
+              onDrop={onDrop}
+              connectionLineType="smoothstep"
+              onDragOver={onDragOver}
+              fitView
+              attributionPosition="top-right"
+              nodeTypes={nodeTypes}
+            >
+              <MiniMap style={minimapStyle} zoomable pannable />
+              <Controls />
+              <Background color="#aaa" gap={16} />
+            </ReactFlow>
+          </div>
+          <ReactTable newTableData={newTableData} />
+        </div>
       </div>
     </div>
   );
