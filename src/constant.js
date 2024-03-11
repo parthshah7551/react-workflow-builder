@@ -5,7 +5,7 @@ export const CSV_OPTIONS = [
 ];
 
 export const NODE_TYPES = {
-  SORTING_NODE: "sorting",
+  SORTING_NODE: "sort",
   FILTER_NODE: "filter",
   INCLUDE_NODE: "includs",
 };

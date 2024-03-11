@@ -4,5 +4,9 @@
 
 .overviewFlow {
   width: 100vw;
-  height: 100vh;
+  height: 80vh;
+}
+
+.tableHeight {
+  height: 150vh;
 }

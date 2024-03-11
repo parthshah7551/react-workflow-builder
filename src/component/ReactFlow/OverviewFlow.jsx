@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import ReactFlow, { addEdge, MiniMap, Controls, Background } from "reactflow";
 
 import "reactflow/dist/style.css";
@@ -9,6 +9,8 @@ import { useFlow } from "../../contextAPI/index.js";
 import ButtonNode from "../NodesComponent/ButtonNode/ButtonNode.jsx";
 import CustomNode from "../NodesComponent/CustomNode/CustomNode.jsx";
 import Sidebar from "../Sidebar/Sidebar.jsx";
+import ReactTable from "../ReactTable/ReactTable.jsx";
+import { sortByColumn } from "../../commonFunctions/sortByColumn.js";
 
 const nodeTypes = {
   buttonNode: ButtonNode,
@@ -20,9 +22,16 @@ const minimapStyle = {
 };
 
 const OverviewFlow = () => {
-  const { nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange } =
-    useFlow();
-  console.log("nodes: ", nodes);
+  const {
+    nodes,
+    edges,
+    setNodes,
+    setEdges,
+    onNodesChange,
+    onEdgesChange,
+    setNewTableData,
+    newTableData,
+  } = useFlow();
   // eslint-disable-next-line no-unused-vars
   const [isOpenSaveModal, setIsOpenSaveModal] = useState(false);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -31,6 +40,9 @@ const OverviewFlow = () => {
     if (state) return state;
   });
 
+  useEffect(() => {
+    console.log("newTableData: ", newTableData);
+  }, [newTableData]);
   console.log("reduxStoreData: ", reduxStoreData);
 
   let sortingOrderOptions = [
@@ -38,9 +50,51 @@ const OverviewFlow = () => {
     { label: "Descending", value: "desc" },
   ];
 
-  const onConnect = useCallback((params) => {
-    return setEdges((eds) => addEdge(params, eds));
-  }, []);
+  const onConnect = useCallback(
+    async (params) => {
+      console.log("params++: ", nodes);
+      console.log("params: ", params);
+
+      let filteredData = [];
+
+      await Promise.all(
+        nodes?.map((nodeItem) => {
+          if (nodeItem?.id === params?.source) {
+            filteredData = [...nodeItem.data.currentOutputData];
+          }
+        })
+      );
+
+      let outputData = [];
+      console.log("outputData: ", outputData);
+      await Promise.all(
+        nodes?.map(async (nodeItem) => {
+          if (nodeItem?.id === params?.target) {
+            if (
+              nodeItem.data.label === "sort" &&
+              !nodeItem.data.selects.column
+            ) {
+              outputData = [...filteredData];
+            } else if (
+              nodeItem.data.label === "sort" &&
+              nodeItem.data.selects.column
+            ) {
+              const outputData = await sortByColumn(
+                filteredData,
+                nodeItem.data.selects.column,
+                nodeItem.data.selects.order
+              );
+              nodeItem.data.currentOutputData = [...outputData];
+              setNewTableData(outputData);
+            }
+          }
+        })
+      );
+
+      return setEdges((eds) => addEdge(params, eds));
+    },
+    [nodes]
+  );
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -65,19 +119,26 @@ const OverviewFlow = () => {
 
       let newNode = [];
       switch (type) {
-        case "sorting":
+        case "sort":
           newNode.push({
             id: `${Date.now()}`,
             type: "customNode",
             position,
             data: {
-              label: `sorting`,
+              label: `sort`,
               totalSelectionDropdowns: [
                 {
-                  "Column Name": JSON.parse(localStorage.getItem("columnName")),
+                  uniqueKey: "column",
+                  label: "Column Name",
+                  dropdownData: JSON.parse(localStorage.getItem("columnName")),
                 },
-                { Order: sortingOrderOptions },
+                {
+                  uniqueKey: "order",
+                  label: "Order",
+                  dropdownData: sortingOrderOptions,
+                },
               ],
+              currentOutputData: reduxStoreData.currentOutputData,
               selects: {
                 column: "",
                 order: "",
@@ -91,26 +152,12 @@ const OverviewFlow = () => {
 
       setNodes((prevNodes) => [...prevNodes, ...newNode]);
     },
-    [reactFlowInstance]
+    [reactFlowInstance, reduxStoreData]
   );
 
   const saveModal = () => {
     setIsOpenSaveModal(true);
   };
-
-  // we are using a bit of a shortcut here to adjust the edge type
-  // this could also be done with a custom edge for example
-  // const edgesWithUpdatedTypes = edges.map((edge) => {
-  //   if (edge.sourceHandle) {
-  //     const edgeType = nodes.find((node) => node.type === "custom").data
-  //       .selects[edge.sourceHandle];
-  //     edge.type = edgeType;
-  //   }
-
-  //   return edge;
-  // });
-  // console.log("edgesWithUpdatedTypes: ", edgesWithUpdatedTypes);
-
   return (
     <div>
       <Navbarcomponent saveModal={saveModal} />
@@ -118,27 +165,31 @@ const OverviewFlow = () => {
         show={isOpenSaveModal}
         onHide={() => setIsOpenSaveModal(false)}
       />
-      <div className="d-flex overviewFlow">
+      <div className="d-flex tableHeight">
         <Sidebar />
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onInit={(instance) => setReactFlowInstance(instance)}
-          onDrop={onDrop}
-          connectionLineType="smoothstep"
-          onDragOver={onDragOver}
-          fitView
-          attributionPosition="top-right"
-          nodeTypes={nodeTypes}
-        >
-          <MiniMap style={minimapStyle} zoomable pannable />
-          <Controls />
-          <Background color="#aaa" gap={16} />
-        </ReactFlow>
-        {/* <ReactTable /> */}
+        <div className="d-flex flex-column tableHeight">
+          <div className="overviewFlow">
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              onConnect={onConnect}
+              onInit={(instance) => setReactFlowInstance(instance)}
+              onDrop={onDrop}
+              connectionLineType="smoothstep"
+              onDragOver={onDragOver}
+              fitView
+              attributionPosition="top-right"
+              nodeTypes={nodeTypes}
+            >
+              <MiniMap style={minimapStyle} zoomable pannable />
+              <Controls />
+              <Background color="#aaa" gap={16} />
+            </ReactFlow>
+          </div>
+          <ReactTable newTableData={newTableData} />
+        </div>
       </div>
     </div>
   );

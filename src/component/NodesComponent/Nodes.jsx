@@ -7,7 +7,7 @@ const Nodes = () => {
   };
   return (
     <div>
-      {["sorting", "filter", "slice", "splice"].map((nodeType) => (
+      {["sort", "filter", "slice", "splice"].map((nodeType) => (
         <div
           key={nodeType}
           className="dndnode"

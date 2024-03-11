@@ -1,29 +1,13 @@
-import React, { createContext, useContext, useRef } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
 import { useEdgesState, useNodesState } from "reactflow";
 import PropTypes from "prop-types";
 
 export const FlowContext = createContext();
-// let initialStartNode = [
-//   {
-//     id: "1",
-//     sourcePosition: "right",
-//     type: "input",
-//     data: { label: "Start" },
-//     position: { x: 0, y: 80 },
-
-//     style: {
-//       display: "flex",
-//       alignItems: "center",
-//       padding: "10px",
-//       backgroundColor: "#ffffff",
-//       boxShadow: " 0px 2px 4px rgba(0, 0, 0, 0.1)",
-//       borderRadius: "8px",
-//     },
-//   },
-// ];
 
 export const FlowProvider = ({ children }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [newTableData, setNewTableData] = useState([]);
+  console.log("nodes++: ", nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const setY = useRef(100);
   const handleNodeUpdate = (nodeId, newData) => {
@@ -46,6 +30,8 @@ export const FlowProvider = ({ children }) => {
         setEdges,
         onEdgesChange,
         handleNodeUpdate,
+        newTableData,
+        setNewTableData,
       }}
     >
       {children}
