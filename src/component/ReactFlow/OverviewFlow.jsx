@@ -11,6 +11,7 @@ import CustomNode from "../NodesComponent/CustomNode/CustomNode.jsx";
 import Sidebar from "../Sidebar/Sidebar.jsx";
 import ReactTable from "../ReactTable/ReactTable.jsx";
 import { sortByColumn } from "../../commonFunctions/sortByColumn.js";
+import { SORT } from "../../constant.js";
 
 const nodeTypes = {
   buttonNode: ButtonNode,
@@ -34,6 +35,7 @@ const OverviewFlow = () => {
   } = useFlow();
   let workFlowDataName = "";
   const jsonWorkFlowName = localStorage.getItem("workFlowDataName");
+  console.log("jsonWorkFlowName==>>>: ", jsonWorkFlowName);
   if (jsonWorkFlowName) {
     workFlowDataName = JSON.parse(jsonWorkFlowName);
   }
@@ -97,13 +99,10 @@ const OverviewFlow = () => {
       await Promise.all(
         nodes?.map(async (nodeItem) => {
           if (nodeItem?.id === params?.target) {
-            if (
-              nodeItem.data.label === "sort" &&
-              !nodeItem.data.selects.column
-            ) {
+            if (nodeItem.data.label === SORT && !nodeItem.data.selects.column) {
               outputData = [...filteredData];
             } else if (
-              nodeItem.data.label === "sort" &&
+              nodeItem.data.label === SORT &&
               nodeItem.data.selects.column
             ) {
               const outputData = await sortByColumn(
@@ -153,6 +152,7 @@ const OverviewFlow = () => {
             position,
             data: {
               label: `sort`,
+              nodeLabel: `This is a Sorting Node`,
               totalSelectionDropdowns: [
                 {
                   uniqueKey: "column",

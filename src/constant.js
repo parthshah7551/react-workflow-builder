@@ -9,3 +9,5 @@ export const NODE_TYPES = {
   FILTER_NODE: "filter",
   INCLUDE_NODE: "includs",
 };
+
+export const SORT = "sort";

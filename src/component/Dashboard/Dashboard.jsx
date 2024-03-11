@@ -43,6 +43,13 @@ const Dashboard = () => {
     });
   };
 
+  const handleEditBtn = (item) => {
+    setEdges(dashboardDetails[item]?.edges);
+    setNodes(dashboardDetails[item]?.nodes);
+    setNewTableData(dashboardDetails[item]?.newTableData);
+    localStorage.setItem("workFlowDataName", JSON.stringify(item));
+  };
+
   useEffect(() => {
     getDashboardDetails();
   }, []);
@@ -71,8 +78,19 @@ const Dashboard = () => {
               >
                 <span>{item}</span>
                 <div>
-                  <Button variant="primary" className="me-2">
-                    Edit
+                  <Button
+                    variant="primary"
+                    className="me-2"
+                    onClick={() => {
+                      handleEditBtn(item);
+                    }}
+                  >
+                    <NavLink
+                      to="/"
+                      style={{ color: "inherit", textDecoration: "none" }}
+                    >
+                      Edit
+                    </NavLink>
                   </Button>{" "}
                   <Button
                     variant="danger"

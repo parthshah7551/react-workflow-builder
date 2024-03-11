@@ -4,14 +4,13 @@ import PropTypes from "prop-types";
 import "./customNode.css";
 import { useFlow } from "../../../contextAPI";
 import { sortByColumn } from "../../../commonFunctions/sortByColumn";
-// import { useSelector } from "react-redux";
+import { SORT } from "../../../constant";
 
 function SelectComponent({ selectionDropDownData, nodeId }) {
   const { setNodes } = useReactFlow();
   const store = useStoreApi();
   const onChange = (evt, uniqueKey) => {
     const { nodeInternals } = store.getState();
-    console.log("evt.target.value: ", evt.target.value);
     setNodes(
       Array.from(nodeInternals.values()).map((node) => {
         if (node.id === nodeId) {
@@ -35,17 +34,22 @@ function SelectComponent({ selectionDropDownData, nodeId }) {
         <div>{selectionDropDownData.label}</div>
         <select
           className="nodrag"
-          defaultValue={selectionDropDownData?.uniqueKey || ""}
           onChange={(e) => onChange(e, selectionDropDownData.uniqueKey)}
         >
           <option value="none" selected disabled hidden>
             Select an Option
           </option>
-          {selectionDropDownData.dropdownData.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
+          {selectionDropDownData?.dropdownData ? (
+            selectionDropDownData.dropdownData.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))
+          ) : (
+            <option key={"choose_csv"} value={"choose_csv"} disabled>
+              Select CSV file first{" "}
             </option>
-          ))}
+          )}
         </select>
       </>
     </div>
@@ -70,10 +74,11 @@ const SortingNode = ({ id, data }) => {
     await Promise.all(
       nodes?.map(async (nodeItem) => {
         if (nodeItem?.id === nodeId) {
-          if (nodeItem.data.label === "sort" && !nodeItem.data.selects.column) {
+          if (nodeItem.data.label === SORT && !nodeItem.data.selects.column) {
             outputData = [...filteredData];
+            setNewTableData(outputData);
           } else if (
-            nodeItem.data.label === "sort" &&
+            nodeItem.data.label === SORT &&
             nodeItem.data.selects.column
           ) {
             const outputData = await sortByColumn(
@@ -91,11 +96,8 @@ const SortingNode = ({ id, data }) => {
 
   return (
     <>
-      <div className="custom-node__header">
-        This is a <strong>sorting node</strong>
-      </div>
+      <div className="custom-node__header">{data.nodeLabel}</div>
       <div className="custom-node__body">
-        {console.log("data: ", data)}
         {data.totalSelectionDropdowns.map((item) => (
           <SelectComponent
             key={item}
