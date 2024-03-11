@@ -14,10 +14,11 @@ import {
 } from "../../redux/reducer.js";
 import { useFlow } from "../../contextAPI/index.js";
 import { NavLink } from "react-router-dom";
+import { CSVLink } from "react-csv";
 
 const Navbarcomponent = ({ saveModal, workFlowDataName }) => {
   const dispatch = useDispatch();
-  const { setNodes, setEdges, setNewTableData } = useFlow();
+  const { setNodes, setEdges, setNewTableData, newTableData } = useFlow();
   const storeDataInNavbar = useSelector((state) => {
     return state;
   });
@@ -88,6 +89,7 @@ const Navbarcomponent = ({ saveModal, workFlowDataName }) => {
     localStorage.removeItem("workFlowDataName");
     localStorage.removeItem("columnName");
   };
+  // const handleExportButton = () => {};
   return (
     <div className="navbarContainer d-flex justify-content-between p-2">
       <div className="d-flex">
@@ -125,6 +127,17 @@ const Navbarcomponent = ({ saveModal, workFlowDataName }) => {
         >
           + Create New
         </Button>
+        {newTableData.length > 0 && (
+          <Button variant="primary" className="me-2">
+            <CSVLink
+              filename="my-file.csv"
+              data={newTableData}
+              style={{ color: "inherit", textDecoration: "none" }}
+            >
+              Export to CSV
+            </CSVLink>
+          </Button>
+        )}
         <Button variant="success" onClick={() => saveModal()}>
           Save
         </Button>

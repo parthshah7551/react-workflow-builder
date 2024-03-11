@@ -106,7 +106,7 @@
 .custom-node_footer {
     padding: 4px 4px;
     border-top: 1px solid #e2e8f0;
-    /* background-color: lightgreen; */
+    background-color: rgba(64, 136, 84, 0.386);
 }
 
 .custom-node__body {
