@@ -32,7 +32,11 @@ const OverviewFlow = () => {
     setNewTableData,
     newTableData,
   } = useFlow();
-  const workFlowDataName = JSON.parse(localStorage.getItem("workFlowDataName"));
+  let workFlowDataName = "";
+  const jsonWorkFlowName = localStorage.getItem("workFlowDataName");
+  if (jsonWorkFlowName) {
+    workFlowDataName = JSON.parse(jsonWorkFlowName);
+  }
 
   // eslint-disable-next-line no-unused-vars
   const [isOpenSaveModal, setIsOpenSaveModal] = useState(false);
@@ -153,7 +157,9 @@ const OverviewFlow = () => {
                 {
                   uniqueKey: "column",
                   label: "Column Name",
-                  dropdownData: JSON.parse(localStorage.getItem("columnName")),
+                  dropdownData:
+                    localStorage.getItem("columnName") &&
+                    JSON.parse(localStorage.getItem("columnName")),
                 },
                 {
                   uniqueKey: "order",

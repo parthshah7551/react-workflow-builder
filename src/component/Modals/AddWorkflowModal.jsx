@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -9,6 +9,14 @@ import { useFlow } from "../../contextAPI";
 
 const AddWorkflowModal = (props) => {
   const { nodes, edges, newTableData } = useFlow();
+  const [workflowExistingData, setWorkflowExistingData] = useState([]);
+
+  useEffect(() => {
+    const workFlowData = localStorage.getItem("workFlowData");
+    if (workFlowData) {
+      setWorkflowExistingData(JSON.parse(workFlowData));
+    }
+  }, []);
   const validationSchema = Yup.object().shape({
     flowName: Yup.string()
       .matches(/^[A-Za-z0-9\s]+$/, "Invalid Flow Name")
@@ -18,6 +26,7 @@ const AddWorkflowModal = (props) => {
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const workFlowData = {
+        ...workflowExistingData,
         [values.flowName.toLowerCase()]: { nodes, edges, newTableData },
       };
       localStorage.setItem("workFlowData", JSON.stringify(workFlowData));

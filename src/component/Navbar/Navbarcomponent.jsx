@@ -13,10 +13,11 @@ import {
   currentOutputData,
 } from "../../redux/reducer.js";
 import { useFlow } from "../../contextAPI/index.js";
+import { NavLink } from "react-router-dom";
 
 const Navbarcomponent = ({ saveModal, workFlowDataName }) => {
   const dispatch = useDispatch();
-  const { setNodes } = useFlow();
+  const { setNodes, setEdges, setNewTableData } = useFlow();
   const storeDataInNavbar = useSelector((state) => {
     return state;
   });
@@ -79,6 +80,14 @@ const Navbarcomponent = ({ saveModal, workFlowDataName }) => {
       });
     }
   };
+  const handleCreateNew = () => {
+    setEdges([]);
+    setNodes([]);
+    setNewTableData([]);
+    localStorage.removeItem("initialFileData");
+    localStorage.removeItem("workFlowDataName");
+    localStorage.removeItem("columnName");
+  };
   return (
     <div className="navbarContainer d-flex justify-content-between p-2">
       <div className="d-flex">
@@ -95,14 +104,25 @@ const Navbarcomponent = ({ saveModal, workFlowDataName }) => {
           />
         </Button>
         <Button variant="primary" className="m-2">
-          Dashboard
+          <NavLink
+            to="/dashboard"
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            Dashboard
+          </NavLink>
         </Button>
       </div>
       <div className="m-2 d-flex align-items-center">
         <h5>{workFlowDataName && `Workflow Name : ${workFlowDataName}`}</h5>
       </div>
       <div className="m-2 me-4">
-        <Button variant="primary" className="me-2">
+        <Button
+          variant="primary"
+          className="me-2"
+          onClick={() => {
+            handleCreateNew();
+          }}
+        >
           + Create New
         </Button>
         <Button variant="success" onClick={() => saveModal()}>
