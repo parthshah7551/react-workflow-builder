@@ -1,23 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+// import { useSelector } from "react-redux";
+import "./App.css";
+import "./Styles/index.css";
+import OverviewFlow from "./component/ReactFlow/OverviewFlow.jsx";
+import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
+import { FlowProvider } from "./contextAPI/index.js";
+import Dashboard from "./component/Dashboard/Dashboard.jsx";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import ErrorBoundary from "./component/Errorboundry/Errorboundry.jsx";
 
 function App() {
+  // const data = useSelector((state) => {
+  //   return state;
+  // });
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ErrorBoundary>
+        <FlowProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<OverviewFlow />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Routes>
+          </BrowserRouter>
+        </FlowProvider>
+      </ErrorBoundary>
     </div>
   );
 }

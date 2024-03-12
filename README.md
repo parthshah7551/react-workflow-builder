@@ -1,70 +1,52 @@
-# Getting Started with Create React App
+### Steps to start the Project.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1. ### `Branch`
 
-## Available Scripts
+   Once you take the clone then just checkout to master branch if not there as master branch contains the latest code.
+   (git checkout master)
 
-In the project directory, you can run:
+2. ### `Set the Node Version`
 
-### `npm start`
+   Node version v20.11.1
+   If you don't have this node version then install it using `nvm i 20.11.1`.
+   Then run the command `nvm use 20.11.1`.
+
+3. ### `Install node_modules` :
+
+   Install the node_modules using `npm i --force` or `yarn`
+
+4. ### `npm start` OR `yarn start`.
+   Run the above command to start the project.
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+################################################################################################################
 
-### `npm test`
+### Demo steps of the project.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. After starting the project using `npm start` you might be able to see the empty react flow page.
 
-### `npm run build`
+2. First there is option of `Select CSV File` in Navbar. From that select any CSV files. (Example files are already there in th project itself: `/src/csv_files`).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. Now drag any node from sort and filter from sidebar and drop it to canvas.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+4. Now connect the csv file node and sort/filter Node.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+5. Select the filter and sorting options from the dropdown.
 
-### `npm run eject`
+6. Then click on the Run Button which is places inside the Node-block.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+7. Now you can see the output in below table.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+8. You can export this data also as there is Export button also in navbar.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+9. There is Create New Button also by which you can create new workflow.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+10. You can also save your workflow using Save functioanlity which is based on unique name.
 
-## Learn More
+11. You can able to see the saved workflows in Dashboard page which you can access from navbar.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+12. In Dashboard, From the list of workflows you can do edit and delete for that workflows.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+13. And this is how the project works.
