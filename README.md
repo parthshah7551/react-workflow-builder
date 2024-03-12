@@ -2,7 +2,7 @@
 
 1. ### `Branch`
 
-   Once you take the clone then just checkout to master branch if not there.
+   Once you take the clone then just checkout to master branch if not there as master branch contains the latest code.
    (git checkout master)
 
 2. ### `Set the Node Version`
