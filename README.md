@@ -36,10 +36,12 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 8. You can export this data also as there is Export button also in navbar.
 
-9. You can also save your workflow using Save functioanlity which is based on unique name.
+9. There is Create New Button also by which you can create new workflow.
 
-10. You can able to see the saved workflows in Dashboard page which you can access from navbar.
+10. You can also save your workflow using Save functioanlity which is based on unique name.
 
-11. In Dashboard, From the list of workflows you can do edit and delete for that workflows.
+11. You can able to see the saved workflows in Dashboard page which you can access from navbar.
 
-12. And this is how the project works.
+12. In Dashboard, From the list of workflows you can do edit and delete for that workflows.
+
+13. And this is how the project works.
