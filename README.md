@@ -1,16 +1,21 @@
 ### Steps to start the Project.
 
-1. ### `Set the Node Version`
+1. ### `Branch`
+
+   Once you take the clone then just checkout to master branch if not there.
+   (git checkout master)
+
+2. ### `Set the Node Version`
 
    Node version v20.11.1
    If you don't have this node version then install it using `nvm i 20.11.1`.
    Then run the command `nvm use 20.11.1`.
 
-2. ### `Install node_modules` :
+3. ### `Install node_modules` :
 
    Install the node_modules using `npm i --force` or `yarn`
 
-3. ### `npm start` OR `yarn start`.
+4. ### `npm start` OR `yarn start`.
    Run the above command to start the project.
 
 Runs the app in the development mode.\
