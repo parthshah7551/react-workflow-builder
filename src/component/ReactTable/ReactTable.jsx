@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import PropTypes from "prop-types";
@@ -7,7 +7,7 @@ import { useFlow } from "../../contextAPI";
 const ReactTable = () => {
   const { newTableData } = useFlow();
   const columnsValue = [];
-  const arrayOfKeys = newTableData?.reduce((keys, obj) => {
+  newTableData?.reduce((keys, obj) => {
     Object.keys(obj)?.forEach((key) => {
       if (!keys.includes(key)) {
         keys?.push(key);
@@ -15,14 +15,6 @@ const ReactTable = () => {
       }
     });
     return keys;
-  }, []);
-  console.log("arrayOfKeys: ", arrayOfKeys);
-  const csvFileDataFunction = () => {
-    const csvfileData = localStorage.getItem("csvFileData");
-    console.log("csvfileData: ", csvfileData);
-  };
-  useEffect(() => {
-    csvFileDataFunction();
   }, []);
 
   const options = {

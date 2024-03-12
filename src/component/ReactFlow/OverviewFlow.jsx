@@ -36,7 +36,6 @@ const OverviewFlow = () => {
   } = useFlow();
   let workFlowDataName = "";
   const jsonWorkFlowName = localStorage.getItem("workFlowDataName");
-  console.log("jsonWorkFlowName==>>>: ", jsonWorkFlowName);
   if (jsonWorkFlowName) {
     workFlowDataName = JSON.parse(jsonWorkFlowName);
   }
@@ -54,13 +53,9 @@ const OverviewFlow = () => {
       const data = localStorage.getItem("workFlowDataName");
       if (data) {
         const parsedData = JSON.parse(data);
-        console.log("parsedData: ", parsedData);
         const workFlowData = localStorage.getItem("workFlowData");
         const parsedWorkFlowData = JSON.parse(workFlowData);
-        console.log("parsedWorkFlowData: ", parsedWorkFlowData);
-        // parsedWorkFlowData.filter((item)=>{})
         const reactFlowData = parsedWorkFlowData[parsedData];
-        console.log("reactFlowData: ", reactFlowData);
         setEdges(reactFlowData.edges);
         setNodes(reactFlowData.nodes);
         setNewTableData(reactFlowData.newTableData);
@@ -72,8 +67,8 @@ const OverviewFlow = () => {
 
   useEffect(() => {
     overViewFlowFunction();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log("reduxStoreData: ", reduxStoreData);
 
   let sortingOrderOptions = [
     { label: "Ascending", value: "asc" },
@@ -82,12 +77,10 @@ const OverviewFlow = () => {
 
   const onConnect = useCallback(
     async (params) => {
-      console.log("params++: ", nodes);
-      console.log("params: ", params);
-
       let filteredData = [];
 
       await Promise.all(
+        // eslint-disable-next-line array-callback-return
         nodes?.map((nodeItem) => {
           if (nodeItem?.id === params?.source) {
             filteredData = [...nodeItem.data.originalNodeData];
@@ -119,10 +112,6 @@ const OverviewFlow = () => {
                 column,
                 filterOptions,
                 inputText
-              );
-              console.log(
-                "filterDataByColumnOutputData: ",
-                filterDataByColumnOutputData
               );
               setNewTableData(filterDataByColumnOutputData);
             } else {

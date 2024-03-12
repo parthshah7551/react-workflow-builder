@@ -8,7 +8,6 @@ import Swal from "sweetalert2";
 const Dashboard = () => {
   const { setEdges, setNodes, setNewTableData } = useFlow();
   const [dashboardDetails, setDashboardDetails] = useState({});
-  console.log("dashboardDetails11: ", dashboardDetails);
 
   const getDashboardDetails = () => {
     const jsonDashboardDetails = localStorage.getItem("workFlowData");
