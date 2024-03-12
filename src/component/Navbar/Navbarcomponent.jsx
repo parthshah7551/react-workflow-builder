@@ -3,9 +3,7 @@ import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 import Papa from "papaparse";
 import Swal from "sweetalert2";
-import { useDispatch, useSelector } from "react-redux";
-// import { counterReducer } from "../../redux/reducer";
-// import { Button, Form } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import {
   initialFileData,
   selectedFileName,
@@ -19,13 +17,10 @@ import { CSVLink } from "react-csv";
 const Navbarcomponent = ({ saveModal, workFlowDataName }) => {
   const dispatch = useDispatch();
   const { setNodes, setEdges, setNewTableData, newTableData } = useFlow();
-  const storeDataInNavbar = useSelector((state) => {
-    return state;
-  });
-  console.log("storeDataInNavbar: ", storeDataInNavbar);
+
   const handleFileUpload = (event) => {
     try {
-      const file = event?.target?.files[0]; // Check if event object and target property exist
+      const file = event?.target?.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -90,7 +85,6 @@ const Navbarcomponent = ({ saveModal, workFlowDataName }) => {
     localStorage.removeItem("workFlowDataName");
     localStorage.removeItem("columnName");
   };
-  // const handleExportButton = () => {};
   return (
     <div className="navbarContainer d-flex justify-content-between p-2">
       <div className="d-flex">

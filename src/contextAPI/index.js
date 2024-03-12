@@ -7,7 +7,6 @@ export const FlowContext = createContext();
 export const FlowProvider = ({ children }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [newTableData, setNewTableData] = useState([]);
-  console.log("nodes++: ", nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const setY = useRef(100);
   const handleNodeUpdate = (nodeId, newData) => {

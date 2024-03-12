@@ -149,7 +149,6 @@ const SortingNode = ({ id, data }) => {
               ></input>
             </>
           ))}
-        {console.log("data: ", data)}
       </div>
       <Handle type="target" position={Position.Left} id={`left-${id}`} />
       <Handle type="source" position={Position.Right} id={`right-${id}`} />
