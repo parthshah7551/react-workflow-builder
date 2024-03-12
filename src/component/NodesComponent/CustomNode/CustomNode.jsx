@@ -65,6 +65,7 @@ const SortingNode = ({ id, data }) => {
     let filteredData = [];
 
     await Promise.all(
+      // eslint-disable-next-line array-callback-return
       nodes?.map((nodeItem) => {
         if (nodeItem?.id === nodeId) {
           filteredData = [...nodeItem.data.originalNodeData];
