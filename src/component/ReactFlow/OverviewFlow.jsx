@@ -11,7 +11,8 @@ import CustomNode from "../NodesComponent/CustomNode/CustomNode.jsx";
 import Sidebar from "../Sidebar/Sidebar.jsx";
 import ReactTable from "../ReactTable/ReactTable.jsx";
 import { sortByColumn } from "../../commonFunctions/sortByColumn.js";
-import { SORT } from "../../constant.js";
+import { FILTER, FILTER_OPTIONS, SORT } from "../../constant.js";
+import { filterDataByColumn } from "../../commonFunctions/filterDataByColumn.js";
 
 const nodeTypes = {
   buttonNode: ButtonNode,
@@ -89,29 +90,43 @@ const OverviewFlow = () => {
       await Promise.all(
         nodes?.map((nodeItem) => {
           if (nodeItem?.id === params?.source) {
-            filteredData = [...nodeItem.data.currentOutputData];
+            filteredData = [...nodeItem.data.originalNodeData];
           }
         })
       );
 
-      let outputData = [];
-      console.log("outputData: ", outputData);
       await Promise.all(
         nodes?.map(async (nodeItem) => {
           if (nodeItem?.id === params?.target) {
-            if (nodeItem.data.label === SORT && !nodeItem.data.selects.column) {
-              outputData = [...filteredData];
-            } else if (
-              nodeItem.data.label === SORT &&
-              nodeItem.data.selects.column
-            ) {
+            const { column, filterOptions, inputText, order } =
+              nodeItem.data.selects;
+            if (nodeItem.data.label === SORT && column) {
               const outputData = await sortByColumn(
                 filteredData,
-                nodeItem.data.selects.column,
-                nodeItem.data.selects.order
+                column,
+                order
               );
               nodeItem.data.currentOutputData = [...outputData];
               setNewTableData(outputData);
+            } else if (
+              nodeItem?.data?.label === FILTER &&
+              column &&
+              filterOptions &&
+              inputText
+            ) {
+              const filterDataByColumnOutputData = await filterDataByColumn(
+                filteredData,
+                column,
+                filterOptions,
+                inputText
+              );
+              console.log(
+                "filterDataByColumnOutputData: ",
+                filterDataByColumnOutputData
+              );
+              setNewTableData(filterDataByColumnOutputData);
+            } else {
+              setNewTableData([...filteredData]);
             }
           }
         })
@@ -168,9 +183,48 @@ const OverviewFlow = () => {
                 },
               ],
               currentOutputData: reduxStoreData.currentOutputData,
+              originalNodeData: reduxStoreData.currentOutputData,
               selects: {
                 column: "",
                 order: "",
+              },
+            },
+          });
+          break;
+        case "filter":
+          newNode.push({
+            id: `${Date.now()}`,
+            type: "customNode",
+            position,
+            data: {
+              label: `filter`,
+              nodeLabel: `This is a Filter Node`,
+              totalSelectionDropdowns: [
+                {
+                  uniqueKey: "column",
+                  label: "Column Name",
+                  dropdownData:
+                    localStorage.getItem("columnName") &&
+                    JSON.parse(localStorage.getItem("columnName")),
+                },
+                {
+                  uniqueKey: "filterOptions",
+                  label: "Filter Options",
+                  dropdownData: FILTER_OPTIONS,
+                },
+              ],
+              totalInputFields: [
+                {
+                  uniqueKey: "inputText",
+                  label: "Input Text",
+                },
+              ],
+              currentOutputData: reduxStoreData.currentOutputData,
+              originalNodeData: reduxStoreData.currentOutputData,
+              selects: {
+                column: "",
+                filter: "",
+                inputText: "",
               },
             },
           });
