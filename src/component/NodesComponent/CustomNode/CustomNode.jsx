@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 import "./customNode.css";
 import { useFlow } from "../../../contextAPI";
 import { sortByColumn } from "../../../commonFunctions/sortByColumn";
-import { SORT } from "../../../constant";
+import { FILTER, SORT } from "../../../constant";
+import { filterDataByColumn } from "../../../commonFunctions/filterDataByColumn";
 
 function SelectComponent({ selectionDropDownData, nodeId }) {
   const { setNodes } = useReactFlow();
@@ -58,38 +59,68 @@ function SelectComponent({ selectionDropDownData, nodeId }) {
 
 const SortingNode = ({ id, data }) => {
   const { nodes, setNewTableData } = useFlow();
+  const { setNodes } = useReactFlow();
+  const store = useStoreApi();
   const runButtonClick = async (nodeId) => {
     let filteredData = [];
 
     await Promise.all(
       nodes?.map((nodeItem) => {
         if (nodeItem?.id === nodeId) {
-          filteredData = [...nodeItem.data.currentOutputData];
+          filteredData = [...nodeItem.data.originalNodeData];
         }
       })
     );
 
-    let outputData = [];
-    console.log("outputData: ", outputData);
     await Promise.all(
       nodes?.map(async (nodeItem) => {
         if (nodeItem?.id === nodeId) {
-          if (nodeItem.data.label === SORT && !nodeItem.data.selects.column) {
-            outputData = [...filteredData];
-            setNewTableData(outputData);
-          } else if (
-            nodeItem.data.label === SORT &&
-            nodeItem.data.selects.column
-          ) {
-            const outputData = await sortByColumn(
+          const { column, filterOptions, inputText, order } =
+            nodeItem.data.selects;
+          if (nodeItem?.data?.label === SORT && column) {
+            const sortByColumnOutputData = await sortByColumn(
               filteredData,
-              nodeItem.data.selects.column,
-              nodeItem.data.selects.order
+              column,
+              order
             );
-            nodeItem.data.currentOutputData = [...outputData];
-            setNewTableData(outputData);
+            nodeItem.data.currentOutputData = [...sortByColumnOutputData];
+            setNewTableData(sortByColumnOutputData);
+          } else if (
+            nodeItem?.data?.label === FILTER &&
+            column &&
+            filterOptions &&
+            inputText
+          ) {
+            const filterDataByColumnOutputData = await filterDataByColumn(
+              filteredData,
+              column,
+              filterOptions,
+              inputText
+            );
+            setNewTableData(filterDataByColumnOutputData);
+          } else {
+            setNewTableData([...filteredData]);
           }
         }
+      })
+    );
+  };
+
+  const onInputChange = (evt, uniqueKey, nodeId) => {
+    const { nodeInternals } = store.getState();
+    setNodes(
+      Array.from(nodeInternals.values()).map((node) => {
+        if (node.id === nodeId) {
+          node.data = {
+            ...node.data,
+            selects: {
+              ...node.data.selects,
+              [uniqueKey]: evt.target.value,
+            },
+          };
+        }
+
+        return node;
       })
     );
   };
@@ -102,9 +133,23 @@ const SortingNode = ({ id, data }) => {
           <SelectComponent
             key={item}
             nodeId={id}
+            totalData={data}
             selectionDropDownData={item}
           />
         ))}
+        {data?.selects?.filterOptions !== "5" &&
+          data?.totalInputFields?.map((inputItem) => (
+            <>
+              <div>{inputItem.label}</div>
+              <input
+                type="text"
+                onChange={(e) => {
+                  onInputChange(e, inputItem?.uniqueKey, id);
+                }}
+              ></input>
+            </>
+          ))}
+        {console.log("data: ", data)}
       </div>
       <Handle type="target" position={Position.Left} id={`left-${id}`} />
       <Handle type="source" position={Position.Right} id={`right-${id}`} />
@@ -128,5 +173,6 @@ SelectComponent.propTypes = {
   sortBy: PropTypes.string,
   nodeId: PropTypes.string,
   selectionDropDownData: PropTypes.object,
+  totalData: PropTypes.object,
 };
 export default memo(SortingNode);

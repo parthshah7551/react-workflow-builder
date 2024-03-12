@@ -62,6 +62,7 @@ const Navbarcomponent = ({ saveModal, workFlowDataName }) => {
                     label: "file",
                     csvFileData: result.data,
                     currentOutputData: result.data,
+                    originalNodeData: result.data,
                   },
                   type: "buttonNode",
                   position: { x: 0, y: 100 },
