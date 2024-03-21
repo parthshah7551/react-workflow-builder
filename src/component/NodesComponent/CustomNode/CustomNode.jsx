@@ -98,7 +98,7 @@ const SortingNode = ({ id, data }) => {
               filterOptions,
               inputText
             );
-            setNewTableData(filterDataByColumnOutputData);
+            setNewTableData(filterDataByColumnOutputData ?? []);
           } else {
             setNewTableData([...filteredData]);
           }

@@ -114,7 +114,7 @@ const OverviewFlow = () => {
                 filterOptions,
                 inputText
               );
-              setNewTableData(filterDataByColumnOutputData);
+              setNewTableData(filterDataByColumnOutputData ?? []);
             } else {
               setNewTableData([...filteredData]);
             }
