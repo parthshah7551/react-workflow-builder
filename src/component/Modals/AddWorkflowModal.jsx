@@ -25,10 +25,13 @@ const AddWorkflowModal = (props) => {
   const initialValues = { flowName: props.workFlowDataName || "" };
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const workFlowData = {
-        ...workflowExistingData,
-        [values.flowName.toLowerCase()]: { nodes, edges, newTableData },
-      };
+      let workFlowData = { ...workflowExistingData };
+      if (values?.flowName) {
+        workFlowData = {
+          ...workflowExistingData,
+          [values.flowName.toLowerCase()]: { nodes, edges, newTableData },
+        };
+      }
       localStorage.setItem("workFlowData", JSON.stringify(workFlowData));
       localStorage.setItem(
         "workFlowDataName",

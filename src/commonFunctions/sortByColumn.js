@@ -4,7 +4,12 @@ export const sortByColumn = (array, columnName, sortOrder) => {
     let valueB = b[columnName];
 
     // Handle string and numeric values
-    if (typeof valueA === "string" && typeof valueB === "string") {
+    if (
+      valueA &&
+      valueB &&
+      typeof valueA === "string" &&
+      typeof valueB === "string"
+    ) {
       // Convert names to lowercase for case-insensitive sorting
       valueA = valueA.toLowerCase();
       valueB = valueB.toLowerCase();
